@@ -1,0 +1,10 @@
+Result | 	 Token			 | Attribute 
+-------+---------------------+---------
+accept | .63                 | constant 
+accept | 12.642              | constant 
+accept | 9593.1              | constant 
+accept | -3941               | constant 
+accept | 213123213123213123  | constant 
+accept | 5023020-            | constant 
+accept | huiwon cho          | constant 
+accept | +3213123123.3123123 | constant 
