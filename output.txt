@@ -1,10 +1,12 @@
-Result | 	 Token			 | Attribute 
--------+---------------------+---------
-accept | .63                 | constant 
-accept | 12.642              | constant 
-accept | 9593.1              | constant 
-accept | -3941               | constant 
-accept | 213123213123213123  | constant 
-accept | 5023020-            | constant 
-accept | huiwon cho          | constant 
-accept | +3213123123.3123123 | constant 
+Result | Token				   | Attribute 
+-------+-----------------------+-----------
+accept | .32312131             | constant 
+accept | 12.642                | constant 
+accept | 9593.1                | constant 
+reject | -3941                 | unknown 
+accept | 20201086              | constant 
+accept | 20201101              | constant 
+reject | computer science      | unknown 
+reject | @dsadasdsdadd#@!$s    | unknown 
+reject | R@DFScas912eklax;,ccw | unknown 
+reject | lexicalansldsa        | unknown 
