@@ -1,4 +1,4 @@
-Result | Token				   | Attribute 
+Result | Token                 | Attribute 
 -------+-----------------------+-----------
 accept | .32312131             | constant 
 accept | 12.642                | constant 

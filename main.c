@@ -89,7 +89,7 @@ int main(void) {
 /* 표 머리글 저장 및 결과를 표준 출력 하는 함수 */
 void printHeader(FILE *outfp, int maxLen) {
     // 머리글
-    fprintf(outfp, "Result | Token\t\t\t\t");
+    fprintf(outfp, "Result | Token              ");
     // 20 넘은 만큼 길이 확장
     for(int i = 0; i < maxLen - 20; i++){
         fprintf(outfp, " ");
