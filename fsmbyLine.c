@@ -21,9 +21,7 @@ int lineCheck(char* line){
                 case 0:
                     if(charClass == DIGIT){   // 입력 알파벳이 0~9 사이면 1로 전이
                         state = 1;
-                    } else if (charClass == DOT){  // 입력 알파벳이 .(dot) 이면 2로 전이
-                        state = 2;
-                    } else {
+                     } else {
                         state = -1;     // 입력 알파벳이 유효하지 않은 값이면, -1(reject)로 전이
                     }
                     break;

@@ -1,6 +1,6 @@
 Result | Token                 | Attribute 
 -------+-----------------------+-----------
-accept | .32312131             | constant 
+reject | .32312131             | unknown 
 accept | 12.642                | constant 
 accept | 9593.1                | constant 
 reject | -3941                 | unknown 
@@ -10,3 +10,5 @@ reject | computer science      | unknown
 reject | @dsadasdsdadd#@!$s    | unknown 
 reject | R@DFScas912eklax;,ccw | unknown 
 reject | lexicalansldsa        | unknown 
+accept | 1.3                   | constant 
+reject | 1.                    | unknown 
