@@ -8,6 +8,7 @@
  * 4. 수락 상태 여부와 입력값, 토큰의 클래스를 출력 및 지정한 파일에 저장한다.
  * */
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
