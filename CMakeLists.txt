@@ -4,5 +4,7 @@ project(LexicalAnalyzer C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(LexicalAnalyzer main.c
-        fsmbyLine.c
-        fsmbyLine.h)
+        fsmbyToken.c
+        fsmbyToken.h
+        tokenizer.c
+        tokenizer.h)

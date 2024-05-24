@@ -12,7 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "fsmbyLine.h"
+#include "fsmbyToken.h"
+#include "tokenizer.h"
 #define MAX_LINES 100
 #define MAX_LENGTH 100
 
@@ -25,7 +26,7 @@ int main(void) {
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char inputLines[MAX_LINES][MAX_LENGTH];
-    int tokenStates[MAX_LINES];
+    int tokenStates[MAX_LINES][MAX_LENGTH];
     int lineCount = 0;
 
     /* 파일 읽기 */
@@ -46,10 +47,25 @@ int main(void) {
     fclose(infp);
 
     char* linePtr[MAX_LINES];
+    char* token;
     for(int i = 0; i < lineCount; i++){
         linePtr[i] = inputLines[i];
-        //한줄 마다 어휘 분석 수행
-        tokenStates[i] = lineCheck(linePtr[i]);
+        int j = 0;
+
+        //한줄마다 토큰 단위로 쪼개기
+        token = lineTokenizer(linePtr[i]);
+        while(token != NULL) {
+            tokenStates[i][j++] = lineCheck(token);
+            token = lineTokenizer(NULL);
+        }
+    }
+
+    // state check
+    for (int i = 0; i < lineCount; i++) {
+        for (int j = 0; j < lineCount; j++) {
+            printf("%d ", tokenStates[i][j]);
+        }
+        printf("\n");
     }
 
     /* 파일 쓰기(저장) */
@@ -74,15 +90,15 @@ int main(void) {
     printHeader(stdout, maxLen);
 
     // 표 데이터(실제 결과) 출력 및 저장, printBody
-    for(int i = 0; i < lineCount; i++){
-        if(tokenStates[i] == 1 || tokenStates[i] == 3){ // accept state
-            fprintf(outfp, "accept | %-*s | constant \n", maxLen, linePtr[i]);
-            fprintf(stdout, "accept | %-*s | constant \n", maxLen, linePtr[i]);
-        } else { //reject state
-            fprintf(outfp, "reject | %-*s | unknown \n", maxLen, linePtr[i]);
-            fprintf(stdout, "reject | %-*s | unknown \n", maxLen, linePtr[i]);
-        }
-    }
+//    for(int i = 0; i < lineCount; i++){
+//        if(tokenStates[i] == 1 || tokenStates[i] == 3){ // accept state
+//            fprintf(outfp, "accept | %-*s | constant \n", maxLen, linePtr[i]);
+//            fprintf(stdout, "accept | %-*s | constant \n", maxLen, linePtr[i]);
+//        } else { //reject state
+//            fprintf(outfp, "reject | %-*s | unknown \n", maxLen, linePtr[i]);
+//            fprintf(stdout, "reject | %-*s | unknown \n", maxLen, linePtr[i]);
+//        }
+//    }
     fclose(outfp);
     return 0;
 }

@@ -1,14 +1,2 @@
-Result | Token                 | Attribute 
--------+-----------------------+-----------
-reject | .32312131             | unknown 
-accept | 12.642                | constant 
-accept | 9593.1                | constant 
-reject | -3941                 | unknown 
-accept | 20201086              | constant 
-accept | 20201101              | constant 
-reject | computer science      | unknown 
-reject | @dsadasdsdadd#@!$s    | unknown 
-reject | R@DFScas912eklax;,ccw | unknown 
-reject | lexicalansldsa        | unknown 
-accept | 1.3                   | constant 
-reject | 1.                    | unknown 
+Result | Token                | Attribute 
+-------+----------------------+-----------
