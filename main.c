@@ -48,6 +48,8 @@ int main(void) {
 
     char* linePtr[MAX_LINES];
     char* token;
+    int tokenCount[lineCount]; // 줄 마다의 토큰 개수
+
     for(int i = 0; i < lineCount; i++){
         linePtr[i] = inputLines[i];
         int j = 0;
@@ -58,11 +60,12 @@ int main(void) {
             tokenStates[i][j++] = lineCheck(token);
             token = lineTokenizer(NULL);
         }
+        tokenCount[i] = j; //토큰 갯수 넣기
     }
 
     // state check
     for (int i = 0; i < lineCount; i++) {
-        for (int j = 0; j < lineCount; j++) {
+        for (int j = 0; j < tokenCount[i]; j++) {
             printf("%d ", tokenStates[i][j]);
         }
         printf("\n");
@@ -78,12 +81,12 @@ int main(void) {
     /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기, 20으로 초기값을 둠
      * 20을 넘으면 최대 길이에 맞춰서 가로 길이 확장 */
     int maxLen = 20;
-    for (int i = 0; i < lineCount; i++){
-        int testLen = strlen(linePtr[i]);
-        if(maxLen < testLen) {
-            maxLen = testLen;
-        }
-    }
+//    for (int i = 0; i < lineCount; i++){
+//        int testLen = strlen(linePtr[i]);
+//        if(maxLen < testLen) {
+//            maxLen = testLen;
+//        }
+//    }
 
     // 표 머리글(Result, Token, Attribute) 출력 및 저장
     printHeader(outfp, maxLen);
