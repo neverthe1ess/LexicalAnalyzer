@@ -4,8 +4,6 @@
  * 입력받은 기호의 클래스(범주)에 따라 상태 전이를 수행후 최종 상태를 반환한다.
  * */
 
-#include <stdio.h>
-#include <ctype.h>
 #include "fsmbyToken.h"
 
 /* lineCheck()
@@ -16,9 +14,9 @@ int lineCheck(char* token){
     char *ch = token; // main 함수에서 넘겨받은 하나의 토큰
     int state = START;
 
-    /* FSM에서 입력값에 따라 상태 전이 수행, 단, 유효하지 않은 입력값이 들어오면 -1이라는 거부 상태로 전이(가상 상태) */
+    /* FSM에서 입력값에 따라 상태 전이 수행, 단, 유효하지 않은 입력값이 들어오면 REJECT라는 거부 상태로 전이(가상 상태) */
     while(*ch != '\0' && state != REJECT){
-        int charClass = checkChar(*ch); // 글자 하나씩 클래스 분류(DIGIT, DOT, UNKNOWN)
+        int charClass = checkChar(*ch); // 글자 하나씩 클래스 분류(DIGIT, DOT, UNKNOWN, ...)
         switch (state) {
             case START:
                 if(charClass == PLUS_SIGN || charClass == MINUS_SIGN) {
@@ -41,6 +39,8 @@ int lineCheck(char* token){
                     state = ID_D41;
                 } else if (charClass == LETTER){ // Alphabet - {f, i, s, d, l}
                     state = ID1;
+                } else if (charClass == ASSIGN_DELIM || charClass == SEMICOLON_DELIM){
+                    state = DE1;
                 } else {
                     state = REJECT;
                 }
@@ -233,6 +233,7 @@ int lineCheck(char* token){
                 } else {
                     state = REJECT;
                 }
+                break;
             case ID_D42:
                 if(*ch == 'n'){
                     state = ID_D43;
@@ -241,6 +242,7 @@ int lineCheck(char* token){
                 } else {
                     state = REJECT;
                 }
+                break;
             case ID_D43:
                 if(*ch == 'g'){
                     state = DATATYPE_D99;
@@ -249,6 +251,17 @@ int lineCheck(char* token){
                 } else {
                     state = REJECT;
                 }
+                break;
+            case DE1:
+                state = REJECT;
+                break;
+            case DATATYPE_D99:
+                if(charClass == LETTER){ // 오토마타 수정
+                    state = ID1;
+                } else {
+                    state = REJECT;
+                }
+                break;
         }
         ch++;
     }
@@ -271,6 +284,10 @@ int checkChar(char ch){
         return DIV_SIGN;
     } else if(isLetter(ch)){
         return LETTER;
+    } else if(isAssign(ch)){
+        return ASSIGN_DELIM;
+    } else if(isSemiColon(ch)){
+        return SEMICOLON_DELIM;
     } else {
         return UNKNOWN;
     }
@@ -303,4 +320,12 @@ int isDivision(char ch){
 
 int isLetter(char ch){
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
+}
+
+int isAssign(char ch){
+    return (ch == '=');
+}
+
+int isSemiColon(char ch){
+    return (ch == ';');
 }

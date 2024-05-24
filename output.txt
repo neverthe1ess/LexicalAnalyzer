@@ -1,2 +1,17 @@
-Result | Token                | Attribute 
--------+----------------------+-----------
+Token         | Attribute 
+--------------+-----------
+int           | DataType 
+integerNumber | Identifier 
+=             | Delimiter 
+10;           | Unknown 
+float         | DataType 
+realNumber    | Identifier 
+=             | Delimiter 
+-34.251;      | Unknown 
+float         | DataType 
+result;       | Unknown 
+result        | Identifier 
+=             | Delimiter 
+integerNumber | Identifier 
++             | Operator 
+realNumber;   | Unknown 

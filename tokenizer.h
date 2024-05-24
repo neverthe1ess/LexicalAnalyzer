@@ -7,6 +7,5 @@
 
 
 char *lineTokenizer(char *line);
-int strLength(char *string);
 
 #endif //LEXICALANALYZER_TOKENIZER_H

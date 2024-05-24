@@ -1,16 +1,6 @@
 #include <stddef.h>
 #include "tokenizer.h"
 
-// 문자열의 길이 반환
-int strLength(char *str){
-    int length = 0;
-    while(*str != '\0'){
-        str++;
-        length++;
-    }
-    return length;
-}
-
 char *lineTokenizer(char *line) {
     static char* nextCheckToken = NULL;
     char *startOfToken;

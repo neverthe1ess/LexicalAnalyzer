@@ -1,3 +1,5 @@
-if double float
-int float dsadsa int float dsadsa int float dsadsa
-short a = 5; int float dsadsa
+int integerNumber = 10;
+float realNumber = -34.251;
+float result;
+
+result = integerNumber + realNumber;

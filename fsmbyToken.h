@@ -2,44 +2,50 @@
  * 작성일자 : 2024/05/19
  * 코드에 대한 설명: 코드의 가독성을 높이기 위한 매크로 사용
  * */
-
-
 #ifndef LEXICALANALYZER_FSMBYTOKEN_H
 #define LEXICALANALYZER_FSMBYTOKEN_H
+
+// symbol
 #define DIGIT 10
 #define DOT 11
 #define LETTER 12
-#define LETTERNOTRVS 13
 #define PLUS_SIGN 14
 #define MINUS_SIGN 15
 #define MUL_SIGN 16
 #define DIV_SIGN 17
+#define ASSIGN_DELIM 18
+#define SEMICOLON_DELIM 19
 #define UNKNOWN 355
 
 // state
 #define START 0
 
+//delimiter
+#define DELIMITER 80
+#define DE1 81
+
+
+// operator
+#define OPERATOR 100
 #define ADD_SUB_OP1 101
+#define MUL_OP2 102
+#define DIV_OP3 103
 
-#define CONST_N1 102
-#define N2 103
-#define CONST_N3 104
+// constant
+#define CONST 110
+#define CONST_N1 111
+#define CONST_N3 113
+#define CONST_C05 115
 
-#define ID1 111
 
-#define MUL_OP2 121
-
-#define DIV_OP3 131
-#define CO3 132
-#define CO4 133
-#define CONST_C05 134
+// identifer
+#define IDENTIFIER 120
+#define ID1 121
 
 #define ID_D01 141
 #define ID_D02 142
 #define ID_D03 143
 #define ID_D04 144
-
-#define DATATYPE_D99 145
 
 #define ID_D11 151
 
@@ -58,7 +64,15 @@
 #define ID_D42 182
 #define ID_D43 183
 
-#define REJECT 299
+// DataType
+#define DATATYPE 190
+#define DATATYPE_D99 199
+
+// reject state
+#define REJECT 290
+#define N2 292
+#define CO3 293
+#define CO4 294
 
 
 int lineCheck(char* token);
@@ -68,9 +82,9 @@ int isPlus(char ch);
 int isMinus(char ch);
 int isMultiply(char ch);
 int isDivision(char ch);
-int isLetNotRsrved(char ch);
 int isLetter(char ch);
 int checkChar(char ch);
-int LetterClassCheck(char ch);
+int isAssign(char ch);
+int isSemiColon(char ch);
 
 #endif //LEXICALANALYZER_FSMBYTOKEN_H
