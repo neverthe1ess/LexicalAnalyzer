@@ -15,7 +15,7 @@
 #include "fsmbyToken.h"
 #include "tokenizer.h"
 #define MAX_LINES 100
-#define MAX_LENGTH 100
+#define MAX_LENGTH 150
 
 void printHeader(FILE *outfp, int maxLen);
 char *tokenClassifier(int state);
