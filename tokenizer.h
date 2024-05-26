@@ -5,7 +5,6 @@
 #ifndef LEXICALANALYZER_TOKENIZER_H
 #define LEXICALANALYZER_TOKENIZER_H
 
-
-char *lineTokenizer(char *line);
-
+char *tokenize(char *line);
+char *generalTokenizer(char *line);
 #endif //LEXICALANALYZER_TOKENIZER_H

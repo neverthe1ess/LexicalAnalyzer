@@ -51,17 +51,17 @@ int main(void) {
     }
     fclose(infp);
 
-    char* token;
 
+    char* token;
     for(int i = 0; i < lineCount; i++){
         // 한 줄마다 토큰 단위로 쪼개기
-        token = lineTokenizer(inputLines[i]);
+        token = generalTokenizer(inputLines[i]);
         while(token != NULL) {
             if(!isDuplicate(tokens, totalTokenCount, token)) {
                 strcpy(tokens[totalTokenCount], token); // 토큰 저장
                 tokenStates[totalTokenCount++] = lineCheck(token);
             }
-            token = lineTokenizer(NULL);
+            token = generalTokenizer(NULL);
         }
     }
 
@@ -73,7 +73,7 @@ int main(void) {
     }
 
     /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기 */
-    int maxLen = 13;
+    int maxLen = 15; // 매직넘버 10, 표 출력 시 알맞은 길이로 기본 설정
     for (int i = 0; i < totalTokenCount; i++){
         int testLen = strlen(tokens[i]);
         if(maxLen < testLen) {
@@ -102,19 +102,19 @@ void printHeader(FILE *outfp, int maxLen) {
     // 머리글
     fprintf(outfp, "Token       ");
     // 최대 길이만큼 길이 확장
-    for(int i = 0; i < maxLen - 13; i++){
+    for(int i = 0; i < maxLen - 15; i++){
         fprintf(outfp, " ");
     }
-    fprintf(outfp, "  | Attribute \n");
+    fprintf(outfp, "    | Attribute \n");
     // 최대 길이만큼 길이 확장
-    for(int i = 0; i < maxLen - 13; i++){
+    for(int i = 0; i < maxLen - 15; i++){
         fprintf(outfp, "-");
     }
     // 머리글과 데이터를 구분하는 테두리
-    fprintf(outfp, "--------------+-----------\n");
+    fprintf(outfp, "----------------+-----------\n");
 
 }
-
+/* 최종 상태에 따른 토큰의 Attribute 분류 */
 char *tokenClassifier(int state){
     if(state >= REJECT){
         return "Unknown";
@@ -128,8 +128,12 @@ char *tokenClassifier(int state){
         return "Operator";
     } else if (state >= DELIMITER){
         return "Delimiter";
+    } else if (state >= STRING) {
+        return "String";
+    } else if (state >= COMMENTS) {
+        return "Comments";
     } else {
-        return "Unknown";
+        return "UnKnown";
     }
 }
 

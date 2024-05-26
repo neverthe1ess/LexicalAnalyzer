@@ -1,9 +1,10 @@
 /* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
  * 작성일자 : 2024/05/26
- * 코드에 대한 설명: 이 코드는 메인 함수에서 Tokenization을 수행한 토큰 단위로 입력받아 유한 상태 기계에서
- * 입력받은 기호의 클래스(범주)에 따라 상태 전이를 수행후 최종 상태를 반환한다.
+ * 코드에 대한 설명: 이 코드는 메인 함수에서 Tokenization을 수행한 토큰 단위로 입력받아
+ * 유한 상태 기계에서 입력받은 기호의 클래스(범주)에 따라 상태 전이를 수행후 최종 상태를 반환한다.
  * */
 
+#include <printf.h>
 #include "fsmbyToken.h"
 
 /* lineCheck()
@@ -41,6 +42,8 @@ int lineCheck(char* token){
                     state = ID1;
                 } else if (charClass == ASSIGN_DELIM || charClass == SEMICOLON_DELIM){
                     state = DE1;
+                } else if (charClass == STRING_SIGN){
+                    state = STR1;
                 } else {
                     state = REJECT;
                 }
@@ -95,25 +98,25 @@ int lineCheck(char* token){
             case CO3:
                 if(charClass == MUL_SIGN){
                     state = CO4;
-                } else {
+                } else { // NOT MUL SIGN
                     state = CO3;
                 } // 오토마타 체크 요망
                 break;
             case CO4:
                 if(charClass == DIV_SIGN){
-                    state = CONST_C05;
-                } else {
-                    state = CO4;
+                    state = COMM_C05;
+                } else { // NOT DIV SIGN
+                    state = CO3;
                 }
                 break;
-            case CONST_C05:
+            case COMM_C05:
                 state = REJECT;
                 break;
 
             case ID_D01:
                 if(*ch == 'l'){
                     state = ID_D02;
-                } else if (charClass == LETTER && *ch != 'l'){
+                } else if (charClass == LETTER || charClass == DIGIT && *ch != 'l'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -122,7 +125,7 @@ int lineCheck(char* token){
             case ID_D02:
                 if(*ch == 'o'){
                     state = ID_D03;
-                } else if (charClass == LETTER && *ch != 'o'){
+                } else if (charClass == LETTER || charClass == DIGIT  && *ch != 'o'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -131,7 +134,7 @@ int lineCheck(char* token){
             case ID_D03:
                 if(*ch == 'a'){
                     state = ID_D04;
-                } else if(charClass == LETTER && *ch != 'a'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'a'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -147,7 +150,7 @@ int lineCheck(char* token){
             case ID_D11:
                 if(*ch == 'n'){
                     state = ID_D04;
-                } else if(charClass == LETTER && *ch != 'n'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'n'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -156,7 +159,7 @@ int lineCheck(char* token){
             case ID_D21:
                 if(*ch == 'h'){
                     state = ID_D22;
-                } else if(charClass == LETTER && *ch != 'h'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'h'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -165,7 +168,7 @@ int lineCheck(char* token){
             case ID_D22:
                 if(*ch == 'o'){
                     state = ID_D23;
-                } else if(charClass == LETTER && *ch != 'o'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'o'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -174,7 +177,7 @@ int lineCheck(char* token){
             case ID_D23:
                 if(*ch == 'r'){
                     state = ID_D04;
-                } else if(charClass == LETTER && *ch != 'r'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'r'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -183,7 +186,7 @@ int lineCheck(char* token){
             case ID_D31:
                 if(*ch == 'o'){
                     state = ID_D32;
-                } else if(charClass == LETTER && *ch != 'o'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'o'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -192,7 +195,7 @@ int lineCheck(char* token){
             case ID_D32:
                 if(*ch == 'u'){
                     state = ID_D33;
-                } else if(charClass == LETTER && *ch != 'u'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'u'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -201,7 +204,7 @@ int lineCheck(char* token){
             case ID_D33:
                 if(*ch == 'b'){
                     state = ID_D34;
-                } else if(charClass == LETTER && *ch != 'b'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'b'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -210,7 +213,7 @@ int lineCheck(char* token){
             case ID_D34:
                 if(*ch == 'l'){
                     state = ID_D35;
-                } else if(charClass == LETTER && *ch != 'l'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'l'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -219,7 +222,7 @@ int lineCheck(char* token){
             case ID_D35:
                 if(*ch == 'e'){
                     state = DATATYPE_D99;
-                } else if(charClass == LETTER && *ch != 'e'){
+                } else if(charClass == LETTER || charClass == DIGIT && *ch != 'e'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -228,7 +231,7 @@ int lineCheck(char* token){
             case ID_D41:
                 if(*ch == 'o'){
                     state = ID_D42;
-                } else if (charClass == LETTER && *ch != 'o'){
+                } else if (charClass == LETTER || charClass == DIGIT  && *ch != 'o'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -237,7 +240,7 @@ int lineCheck(char* token){
             case ID_D42:
                 if(*ch == 'n'){
                     state = ID_D43;
-                } else if (charClass == LETTER && *ch != 'n'){
+                } else if (charClass == LETTER || charClass == DIGIT  && *ch != 'n'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -246,7 +249,7 @@ int lineCheck(char* token){
             case ID_D43:
                 if(*ch == 'g'){
                     state = DATATYPE_D99;
-                } else if(charClass == LETTER && *ch != 'g'){
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'g'){
                     state = ID1;
                 } else {
                     state = REJECT;
@@ -261,6 +264,16 @@ int lineCheck(char* token){
                 } else {
                     state = REJECT;
                 }
+                break;
+            case STR1:
+                if(charClass == STRING_SIGN){
+                    state = STR2;
+                } else {
+                    state = STR1;
+                }
+                break;
+            case STR2:
+                state = REJECT;
                 break;
         }
         ch++;
@@ -288,6 +301,8 @@ int checkChar(char ch){
         return ASSIGN_DELIM;
     } else if(isSemiColon(ch)){
         return SEMICOLON_DELIM;
+    } else if(isStringSign(ch)){
+        return STRING_SIGN;
     } else {
         return UNKNOWN;
     }
@@ -328,4 +343,8 @@ int isAssign(char ch){
 
 int isSemiColon(char ch){
     return (ch == ';');
+}
+
+int isStringSign(char ch){
+    return (ch == '"');
 }

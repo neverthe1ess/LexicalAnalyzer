@@ -80,12 +80,12 @@ if(TokenState1 == false & TokenState2 == false)
                 break;
             case CO4:
                 if(charClass == DIV_SIGN){
-                    state = CONST_C05;
+                    state = COMM_C05;
                 } else {
                     state = CO3;	// CO4 -> CO3
                 }
                 break;
-            case CONST_C05:
+            case COMM_C05:
                 state = REJECT;
                 break;
 

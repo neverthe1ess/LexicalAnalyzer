@@ -15,10 +15,19 @@
 #define DIV_SIGN 17
 #define ASSIGN_DELIM 18
 #define SEMICOLON_DELIM 19
+#define STRING_SIGN 20
 #define UNKNOWN 355
 
 // state
 #define START 0
+
+//Comments
+#define COMMENTS 60
+#define COMM_C05 61
+
+//String
+#define STRING 70
+#define STR2 72
 
 //delimiter
 #define DELIMITER 80
@@ -35,7 +44,6 @@
 #define CONST 110
 #define CONST_N1 111
 #define CONST_N3 113
-#define CONST_C05 115
 
 
 // identifer
@@ -68,12 +76,12 @@
 #define DATATYPE 190
 #define DATATYPE_D99 199
 
-// reject state
+// 최종적으로 Reject state
 #define REJECT 290
 #define N2 292
 #define CO3 293
 #define CO4 294
-
+#define STR1 295
 
 int lineCheck(char* token);
 int isDigit(char ch);
@@ -86,5 +94,6 @@ int isLetter(char ch);
 int checkChar(char ch);
 int isAssign(char ch);
 int isSemiColon(char ch);
+int isStringSign(char ch);
 
 #endif //LEXICALANALYZER_FSMBYTOKEN_H
