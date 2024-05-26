@@ -1,5 +1,6 @@
-int integerNumber = 10;
-float realNumber = -34.251;
-float result;
+int integerNumber = 10;;;;
+float realNumber = -34.251
+float result
 
-result = integerNumber + realNumber;
+result = "integerNumber + realNumber"
+double short Long

@@ -1,17 +1,17 @@
-Token         | Attribute 
---------------+-----------
-int           | DataType 
-integerNumber | Identifier 
-=             | Delimiter 
-10;           | Unknown 
-float         | DataType 
-realNumber    | Identifier 
-=             | Delimiter 
--34.251;      | Unknown 
-float         | DataType 
-result;       | Unknown 
-result        | Identifier 
-=             | Delimiter 
-integerNumber | Identifier 
-+             | Operator 
-realNumber;   | Unknown 
+Token          | Attribute 
+---------------+-----------
+int            | DataType 
+integerNumber  | Identifier 
+=              | Delimiter 
+10             | Constant 
+;              | Delimiter 
+float          | DataType 
+realNumber     | Identifier 
+-34.251        | Constant 
+result         | Identifier 
+"integerNumber | Unknown 
++              | Operator 
+realNumber"    | Unknown 
+double         | DataType 
+short          | DataType 
+Long           | Identifier 

@@ -1,6 +1,6 @@
 /* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
- * 작성일자 : 2024/05/19
- * 코드에 대한 설명: 이 코드는 메인 함수에서 한 줄 단위로 입력받아 유한 상태 기계에서
+ * 작성일자 : 2024/05/26
+ * 코드에 대한 설명: 이 코드는 메인 함수에서 Tokenization을 수행한 토큰 단위로 입력받아 유한 상태 기계에서
  * 입력받은 기호의 클래스(범주)에 따라 상태 전이를 수행후 최종 상태를 반환한다.
  * */
 
@@ -256,7 +256,7 @@ int lineCheck(char* token){
                 state = REJECT;
                 break;
             case DATATYPE_D99:
-                if(charClass == LETTER){ // 오토마타 수정
+                if(charClass == LETTER || charClass == DIGIT){
                     state = ID1;
                 } else {
                     state = REJECT;

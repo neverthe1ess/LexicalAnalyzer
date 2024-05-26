@@ -1,6 +1,6 @@
 /* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
- * 작성일자 : 2024/05/19
- * 코드에 대한 설명: 부호와 지수가 없는 실수형(정수까지 포함) 상수를 인식하는 어휘 분석기 코드이다.
+ * 작성일자 : 2024/05/26
+ * 코드에 대한 설명: 여러 요구사항을 만족하는 어휘 분석기 코드임.
  * 수행 순서:
  * 1. 지정된 입출력 파일 path에 따라 파일을 읽고 2차원 배열에 저장한다.
  * 2. 2차원 배열에 저장된 입력값을 한 줄씩 FSM 함수(linecheck)를 호출하여 수행한다.
@@ -15,10 +15,12 @@
 #include "fsmbyToken.h"
 #include "tokenizer.h"
 #define MAX_LINES 100
-#define MAX_LENGTH 150
+#define MAX_LENGTH 300
+#define MAX_TOKENS 1000
 
 void printHeader(FILE *outfp, int maxLen);
 char *tokenClassifier(int state);
+int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token);
 
 int main(void) {
     // 입출력 파일의 path
@@ -27,9 +29,10 @@ int main(void) {
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char inputLines[MAX_LINES][MAX_LENGTH];
-    char tokens[MAX_LINES][MAX_LENGTH][MAX_LENGTH]; // 토큰을 저장할 배열 추가
-    int tokenStates[MAX_LINES][MAX_LENGTH];
+    char tokens[MAX_TOKENS][MAX_LENGTH]; // 모든 토큰을 저장할 배열 추가
+    int tokenStates[MAX_TOKENS]; // 토큰의 상태를 저장할 배열
     int lineCount = 0;
+    int totalTokenCount = 0; // 전체 토큰 개수
 
     /* 파일 읽기 */
     FILE* infp = fopen(inputFile, "r");
@@ -48,26 +51,19 @@ int main(void) {
     }
     fclose(infp);
 
-    char* linePtr[MAX_LINES];
     char* token;
-    int tokenCount[lineCount]; // 줄 마다의 토큰 개수
-    int totalTokenCount = 0; // 총 토큰 개수
 
     for(int i = 0; i < lineCount; i++){
-        linePtr[i] = inputLines[i];
-        int j = 0;
-
-        //한 줄마다 토큰 단위로 쪼개기
-        token = lineTokenizer(linePtr[i]);
+        // 한 줄마다 토큰 단위로 쪼개기
+        token = lineTokenizer(inputLines[i]);
         while(token != NULL) {
-            strcpy(tokens[i][j], token); // 토큰 저장
-            tokenStates[i][j++] = lineCheck(token);
+            if(!isDuplicate(tokens, totalTokenCount, token)) {
+                strcpy(tokens[totalTokenCount], token); // 토큰 저장
+                tokenStates[totalTokenCount++] = lineCheck(token);
+            }
             token = lineTokenizer(NULL);
         }
-        tokenCount[i] = j; //토큰 갯수 넣기
-        totalTokenCount += j; // 개수 누적
     }
-
 
     /* 파일 쓰기(저장) */
     FILE* outfp = fopen(outputFile, "w");
@@ -76,29 +72,25 @@ int main(void) {
         exit(-1);
     }
 
-    /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기, 20으로 초기값을 둠
-     * 20을 넘으면 최대 길이에 맞춰서 가로 길이 확장 */
+    /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기 */
     int maxLen = 13;
-//    for (int i = 0; i < lineCount; i++){
-//        int testLen = strlen(linePtr[i]);
-//        if(maxLen < testLen) {
-//            maxLen = testLen;
-//        }
-//    }
+    for (int i = 0; i < totalTokenCount; i++){
+        int testLen = strlen(tokens[i]);
+        if(maxLen < testLen) {
+            maxLen = testLen;
+        }
+    }
 
     // 표 머리글(Result, Token, Attribute) 출력 및 저장
     printHeader(outfp, maxLen);
     printHeader(stdout, maxLen);
 
-
     char *attribute;
     // 표 데이터(실제 결과) 출력 및 저장, printBody
-    for(int i = 0; i < lineCount; i++){
-        for(int j = 0; j < tokenCount[i]; j++){ // accept state
-            attribute = tokenClassifier(tokenStates[i][j]);
-            fprintf(outfp, "%-*s | %s \n", maxLen, tokens[i][j], attribute);
-            fprintf(stdout, "%-*s | %s \n", maxLen, tokens[i][j], attribute);
-        }
+    for(int i = 0; i < totalTokenCount; i++){
+        attribute = tokenClassifier(tokenStates[i]);
+        fprintf(outfp, "%-*s | %s \n", maxLen, tokens[i], attribute);
+        fprintf(stdout, "%-*s | %s \n", maxLen, tokens[i], attribute);
     }
 
     fclose(outfp);
@@ -109,13 +101,13 @@ int main(void) {
 void printHeader(FILE *outfp, int maxLen) {
     // 머리글
     fprintf(outfp, "Token       ");
-    // 20 넘은 만큼 길이 확장
-    for(int i = 0; i < maxLen - 20; i++){
+    // 최대 길이만큼 길이 확장
+    for(int i = 0; i < maxLen - 13; i++){
         fprintf(outfp, " ");
     }
     fprintf(outfp, "  | Attribute \n");
-    // 20 넘은 만큼 길이 확장
-    for(int i = 0; i < maxLen - 20; i++){
+    // 최대 길이만큼 길이 확장
+    for(int i = 0; i < maxLen - 13; i++){
         fprintf(outfp, "-");
     }
     // 머리글과 데이터를 구분하는 테두리
@@ -124,7 +116,7 @@ void printHeader(FILE *outfp, int maxLen) {
 }
 
 char *tokenClassifier(int state){
-    if(state >= 290){
+    if(state >= REJECT){
         return "Unknown";
     } else if (state >= DATATYPE){
         return "DataType";
@@ -139,4 +131,14 @@ char *tokenClassifier(int state){
     } else {
         return "Unknown";
     }
+}
+
+/* 토큰이 중복인지 확인하는 함수 */
+int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token) {
+    for(int i = 0; i < tokenCount; i++) {
+        if(strcmp(tokens[i], token) == 0) {
+            return 1; // 중복
+        }
+    }
+    return 0; // 중복 아님
 }
