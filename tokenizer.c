@@ -8,11 +8,14 @@
 #include <stdio.h>
 #include "tokenizer.h"
 
+static bool existQuotationSymbol = false; // TokenState1, 함수 분리를 위해 전역 정적 변수
+static bool existCommentSymbol = false; // TokenState2, 함수 분리를 위해 전역 정적 변수
+
 char *generalTokenizer(char *line) {
     static char *nextCheckToken = NULL;  // static 변수로 함수가 다시 호출되어도 호출될때 초기화 되지 않음.
     static bool existSemiColons = false; // 10; 붙어 있는 세미콜론 제거를 위한 변수, 10;  토큰 검사시 True 전환
-    static bool existQuotationSymbol = false; // TokenState1
-    static bool existCommentSymbol = false; // TokenState2
+    static bool stringStart = false;
+
     char *startOfToken;
 
     // 세미콜론을 발견 뒤 다음 토큰 반환에서 세미콜론 반환
@@ -33,7 +36,8 @@ char *generalTokenizer(char *line) {
 
     startOfToken = nextCheckToken;
 
-    if(existQuotationSymbol == false && existCommentSymbol == false){
+    // 주석 기호나 문자열 따옴표 기호가 아닌 일반 심볼일 때
+    if(isGeneralSymbol()){
         // 구분자나 주석기호, 따옴표, 널이 될 때까지, 즉 토큰 끝까지 이동
         while (*nextCheckToken != ' ' && *nextCheckToken != ';' && *nextCheckToken != '\n' && *nextCheckToken != '\0') {
             // 주석 기호 탐지 시
@@ -41,50 +45,67 @@ char *generalTokenizer(char *line) {
                 existCommentSymbol = true;
                 nextCheckToken += 2; // 주석의 시작을 넘기기
                 break;
+            } else if (*nextCheckToken == '"'){ //stringstart 아직 구현 안함
+                existQuotationSymbol = true;
+                nextCheckToken++;
+                break;
             }
             nextCheckToken++;
-        }
-        if (*nextCheckToken == ' ') {
+        } if (*nextCheckToken == ' ' && isGeneralSymbol()) {
             *nextCheckToken = '\0';
             nextCheckToken++;
             // 중복된 공백 넘어가기
             while (*nextCheckToken == ' ') {
                 nextCheckToken++;
             }
-        } else if (*nextCheckToken == ';') {
+        } else if (*nextCheckToken == ';' && isGeneralSymbol()) {
             *nextCheckToken = '\0';
             nextCheckToken++;
             while (*nextCheckToken == ';') {
                 nextCheckToken++;
             }
             existSemiColons = true; // 10; 토큰에서 세미콜론 검출시 True로 전환 후, 다음 토큰 분리 때 세미콜론 반환
-        } else if(*nextCheckToken == '\n'){
+        } else if(*nextCheckToken == '\n' && isGeneralSymbol()){
             *nextCheckToken = '\0';
             nextCheckToken++;
             while (*nextCheckToken == '\n') {
                 nextCheckToken++;
             }
-        } else if (*nextCheckToken == '\0') {
+        } else if (*nextCheckToken == '\0' && isGeneralSymbol()) {
             //문장의 끝 도달 NULL을 반환함. 즉, 하나의 라인에서 더 이상 Tokenization를 수행하지 않음.
             nextCheckToken = NULL;
         }
     }
-
-    if(existCommentSymbol == true){
+    // 주석 기호 검출 시
+    if(existCommentSymbol == true){ // 얘도 세미콜론 로직과 비슷하게 구현하자 .
         while (*nextCheckToken != '\0') {
             if (*nextCheckToken == '*' && *(nextCheckToken + 1) == '/') {
-                printf("test");
                 existCommentSymbol = false;
                 nextCheckToken += 2; // 주석의 끝을 넘기기
-                if(*nextCheckToken != ' '){
-                    *nextCheckToken = '\0';
-                }
+                *nextCheckToken = '\0';
                 nextCheckToken++;
                 break;
             }
             nextCheckToken++;
         }
     }
+
+    if(existQuotationSymbol == true){
+        while(*nextCheckToken != '\0'){
+            if(*nextCheckToken == '"'){
+                existQuotationSymbol = false;
+                nextCheckToken++;
+                *nextCheckToken = '\0';
+                break;
+            }
+            nextCheckToken++;
+        }
+    }
+
     return startOfToken;
+}
+
+bool isGeneralSymbol() {
+    return existCommentSymbol == false && existQuotationSymbol == false;
 }
 

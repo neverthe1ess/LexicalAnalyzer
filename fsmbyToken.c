@@ -5,6 +5,7 @@
  * */
 
 #include "fsmbyToken.h"
+#include <stdio.h>
 
 /* lineCheck()
  * 토큰 단위로 입력받아 FSM에서 상태 전이를 수행한다.

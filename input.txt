@@ -1,3 +1,5 @@
-abc /*20*/
-abc23
-int a = 5
+dsadsadasdasdaddasda
+dasdasdasdas
+dsaasdasdasadasdasda
+dasdasdasda
+char a = /* */
