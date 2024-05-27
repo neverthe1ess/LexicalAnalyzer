@@ -1,2 +1,3 @@
-char a =
-sadsadasddadasdasdasdadada
+abc /*20*/
+abc23
+int a = 5

@@ -67,7 +67,6 @@
 #define ID_D34 174
 #define ID_D35 175
 
-//2-3 D21 수정
 #define ID_D41 181
 #define ID_D42 182
 #define ID_D43 183

@@ -4,7 +4,6 @@
  * 유한 상태 기계에서 입력받은 기호의 클래스(범주)에 따라 상태 전이를 수행후 최종 상태를 반환한다.
  * */
 
-#include <printf.h>
 #include "fsmbyToken.h"
 
 /* lineCheck()

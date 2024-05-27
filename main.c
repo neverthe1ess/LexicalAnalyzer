@@ -14,8 +14,8 @@
 #include <string.h>
 #include "fsmbyToken.h"
 #include "tokenizer.h"
-#define MAX_LINES 100
-#define MAX_LENGTH 300
+#define MAX_LENGTH 5000
+#define MAX_LINE_LENGTH 100
 #define MAX_TOKENS 1000
 
 void printHeader(FILE *outfp, int maxLen);
@@ -28,10 +28,10 @@ int main(void) {
     const char* outputFile = "/Users/neverthe1ess/CLionProjects/LexicalAnalyzer/output.txt";
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
-    char inputLines[MAX_LINES][MAX_LENGTH];
+    char *inputCode;
+    char tmpBuf[MAX_LINE_LENGTH];
     char tokens[MAX_TOKENS][MAX_LENGTH]; // 모든 토큰을 저장할 배열 추가
     int tokenStates[MAX_TOKENS]; // 토큰의 상태를 저장할 배열
-    int lineCount = 0;
     int totalTokenCount = 0; // 전체 토큰 개수
 
     /* 파일 읽기 */
@@ -41,28 +41,31 @@ int main(void) {
         exit(-1);
     }
 
-    // 한 라인씩 개행 문자까지 읽어서 문자열 배열에 저장, 다 읽으면 fgets는 NULL을 반환하여 루프 종료
-    while(fgets(inputLines[lineCount], MAX_LENGTH, infp) && lineCount < MAX_LINES){
-        // 어휘 분석 시 방해가 되는 개행 문자 제거
-        if(inputLines[lineCount][strlen(inputLines[lineCount]) - 1] == '\n'){
-            inputLines[lineCount][strlen(inputLines[lineCount]) - 1] = '\0';
+    /* 두줄 주석에 대응하기 위해 기존의 한줄 단위로 받던 매커니즘에서
+     * 입력을 통째로 받은 뒤 전체를 끝까지 모두 다 토큰 단위로 쪼개기 */
+
+    inputCode = malloc(MAX_LENGTH);
+    memset(inputCode, 0, MAX_LENGTH);
+    while (fgets(tmpBuf, sizeof(tmpBuf), infp) != NULL) {
+        if (strlen(inputCode) + strlen(tmpBuf) >= MAX_LENGTH) {
+            fprintf(stderr, "코드의 길이가 너무 깁니다!\n");
+            exit(-1);
         }
-        lineCount++;
+        // inputCode에 buffer의 내용을 누적
+        strcat(inputCode, tmpBuf);
     }
     fclose(infp);
 
 
     char* token;
-    for(int i = 0; i < lineCount; i++){
-        // 한 줄마다 토큰 단위로 쪼개기
-        token = generalTokenizer(inputLines[i]);
-        while(token != NULL) {
-            if(!isDuplicate(tokens, totalTokenCount, token)) {
-                strcpy(tokens[totalTokenCount], token); // 토큰 저장
-                tokenStates[totalTokenCount++] = lineCheck(token);
-            }
-            token = generalTokenizer(NULL);
+    // 한 줄마다 토큰 단위로 쪼개기
+    token = generalTokenizer(inputCode);
+    while(token != NULL) {
+        if(!isDuplicate(tokens, totalTokenCount, token)) {
+            strcpy(tokens[totalTokenCount], token); // 토큰 저장
+            tokenStates[totalTokenCount++] = lineCheck(token);
         }
+        token = generalTokenizer(NULL);
     }
 
     /* 파일 쓰기(저장) */
@@ -73,7 +76,7 @@ int main(void) {
     }
 
     /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기 */
-    int maxLen = 15; // 매직넘버 10, 표 출력 시 알맞은 길이로 기본 설정
+    int maxLen = 15; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
     for (int i = 0; i < totalTokenCount; i++){
         int testLen = strlen(tokens[i]);
         if(maxLen < testLen) {
@@ -89,11 +92,13 @@ int main(void) {
     // 표 데이터(실제 결과) 출력 및 저장, printBody
     for(int i = 0; i < totalTokenCount; i++){
         attribute = tokenClassifier(tokenStates[i]);
-        fprintf(outfp, "%-*s | %s \n", maxLen, tokens[i], attribute);
-        fprintf(stdout, "%-*s | %s \n", maxLen, tokens[i], attribute);
+        if(attribute){
+            fprintf(outfp, "%-*s | %s \n", maxLen, tokens[i], attribute);
+            fprintf(stdout, "%-*s | %s \n", maxLen, tokens[i], attribute);
+        }
     }
-
     fclose(outfp);
+    free(inputCode);
     return 0;
 }
 
@@ -133,7 +138,7 @@ char *tokenClassifier(int state){
     } else if (state >= COMMENTS) {
         return "Comments";
     } else {
-        return "UnKnown";
+        return NULL;
     }
 }
 

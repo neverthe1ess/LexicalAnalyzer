@@ -1,8 +1,9 @@
-Token                      | Attribute 
----------------------------+-----------
-char                       | Identifier 
-a                          | Identifier 
-=                          | Delimiter 
-test                       | Identifier 
-                           | UnKnown 
-sadsadasddadasdasdasdadada | Identifier 
+Token           | Attribute 
+----------------+-----------
+abc             | Identifier 
+/*20*/          | Comments 
+abc23           | Identifier 
+int             | DataType 
+a               | Identifier 
+=               | Delimiter 
+5               | Constant 
