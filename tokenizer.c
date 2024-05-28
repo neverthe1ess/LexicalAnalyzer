@@ -17,7 +17,6 @@ char *generalTokenizer(char *line) {
     static bool stringStart = false;
 
     char *startOfToken;
-
     // 세미콜론을 발견 뒤 다음 토큰 반환에서 세미콜론 반환
     if (existSemiColons) {
         existSemiColons = false;
@@ -96,12 +95,12 @@ char *generalTokenizer(char *line) {
                 existQuotationSymbol = false;
                 nextCheckToken++;
                 *nextCheckToken = '\0';
+                nextCheckToken++;
                 break;
             }
             nextCheckToken++;
         }
     }
-
     return startOfToken;
 }
 

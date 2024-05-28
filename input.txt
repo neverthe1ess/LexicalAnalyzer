@@ -1,5 +1,4 @@
-dsadsadasdasdaddasda
-dasdasdasdas
-dsaasdasdasadasdasda
-dasdasdasda
-char a = /* */
+float a = 5;
+char ch -
+"srastsdasdas"
+21312313

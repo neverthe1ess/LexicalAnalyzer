@@ -144,8 +144,8 @@ char *tokenClassifier(int state){
 
 /* 토큰이 중복인지 확인하는 함수 */
 int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token) {
-    for(int i = 0; i < tokenCount; i++) {
-        if(strcmp(tokens[i], token) == 0) {
+    for (int i = 0; i < tokenCount; i++) {
+        if (strcmp(tokens[i], token) == 0) {
             return 1; // 중복
         }
     }

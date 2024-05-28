@@ -1,10 +1,12 @@
-Token                | Attribute 
----------------------+-----------
-dsadsadasdasdaddasda | Identifier 
-dasdasdasdas         | Identifier 
-dsaasdasdasadasdasda | Identifier 
-dasdasdasda          | Identifier 
-char                 | Identifier 
-a                    | Identifier 
-=                    | Delimiter 
-/* */                | Comments 
+Token           | Attribute 
+----------------+-----------
+float           | DataType 
+a               | Identifier 
+=               | Delimiter 
+5               | Constant 
+;               | Delimiter 
+char            | Identifier 
+ch              | Identifier 
+-               | Operator 
+"srastsdasdas"  | String 
+21312313        | Constant 
