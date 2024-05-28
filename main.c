@@ -18,6 +18,7 @@
 #define MAX_LINE_LENGTH 100
 #define MAX_TOKENS 500
 
+extern bool isMallocVar;
 void printHeader(FILE *outfp, int maxLen);
 char *tokenClassifier(int state);
 int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token);
@@ -86,6 +87,10 @@ int main(void) {
         if(!isDuplicate(tokens, totalTokenCount, token)) {
             strcpy(tokens[totalTokenCount], token); // 토큰 저장
             tokenStates[totalTokenCount++] = lineCheck(token);
+        }
+        if(isMallocVar == true){
+            free(token);
+            isMallocVar = false;
         }
         token = generalTokenizer(NULL);
     }

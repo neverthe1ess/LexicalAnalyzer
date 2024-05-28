@@ -10,6 +10,10 @@
 #include <printf.h>
 #include "tokenizer.h"
 
+/* 선택적 동적 메모리 반환을 위한 변수임. comment와 String 토큰은 동적 할당 후 main으로 토큰을 반환하는데
+ * 다른 토큰들과 구분되지 않아 정적 할당된 일반 토큰들을 free() 할 수 있는 문제를 막기 위함임.  */
+
+bool isMallocVar = false;
 static char *nextCheckToken = NULL;  // static global 변수로 함수가 다시 호출되어도 호출될때 초기화 되지 않음.
 
 char *generalTokenizer(char *line) {
@@ -17,6 +21,7 @@ char *generalTokenizer(char *line) {
 
     char *startOfToken;
     char *startOfCommentToken;
+    char *startOfStringToken;
     // 세미콜론을 발견 뒤 다음 토큰 반환에서 세미콜론 반환
     if (existSemiColons) {
         existSemiColons = false;
@@ -41,10 +46,13 @@ char *generalTokenizer(char *line) {
             if(*nextCheckToken == '/' && *(nextCheckToken + 1) == '*'){
                 startOfCommentToken = nextCheckToken;
                 nextCheckToken += 2; // 주석의 시작을 넘기기
+                isMallocVar = true;
                 return commentReader(startOfCommentToken);
-            } else if (*nextCheckToken == '"'){ //stringstart 아직 구현 안함
+            } else if (*nextCheckToken == '"'){
+                startOfStringToken = nextCheckToken;
                 nextCheckToken++;
-                break;
+                isMallocVar = true;
+                return stringReader(startOfStringToken);
             }
             nextCheckToken++;
     }
@@ -75,7 +83,7 @@ char *generalTokenizer(char *line) {
     return startOfToken;
 }
 
-// 주석 처리기
+// 주석 처리 함수
 char *commentReader(char *startOfToken){
     char *commentToken = malloc(MAX_LENGTH);
     char *commentStart = startOfToken;
@@ -84,6 +92,7 @@ char *commentReader(char *startOfToken){
             nextCheckToken++;
             if(*nextCheckToken == '\0'){ // 주석이 닫히지 않았을 때
                 printf("주석이 닫히지 않았습니다!\n");
+                free(commentToken);
                 return "COMMENTS ERROR";
             }
     }
@@ -94,3 +103,27 @@ char *commentReader(char *startOfToken){
     }
     return commentToken;
 }
+
+
+// 문자열 처리 함수
+char *stringReader(char *startOfToken){
+    char *stringToken = malloc(MAX_LENGTH);
+    char *stringStart = startOfToken;
+
+    while(*nextCheckToken != '"'){
+        nextCheckToken++;
+        if(*nextCheckToken == '\0' || *nextCheckToken == '\n'){
+            printf("비정상적인 문자열 입력입니다! 따옴표를 닫아 주세요!\n");
+            free(stringToken);
+            return "STRING ERROR";
+        }
+    }
+    if(*nextCheckToken == '"'){
+        nextCheckToken++;
+        strncpy(stringToken, stringStart, nextCheckToken - stringStart);
+        stringToken[nextCheckToken - stringStart] = '\0';
+    }
+    // 정상 반환인 경우 Main 함수에서 토큰 사용 후 명시적 free() 수행
+    return stringToken;
+}
+

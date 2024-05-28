@@ -1,3 +1,7 @@
-Token             | Attribute 
-------------------+-----------
-/*3213213123123*/ | Comments 
+Token           | Attribute 
+----------------+-----------
+;               | Delimiter 
+/**/            | Comments 
+Long            | Identifier 
+/*dsadsadad */  | Comments 
+30              | Constant 
