@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include <printf.h>
+#include <stdio.h>
 #include "tokenizer.h"
 
 /* 선택적 동적 메모리 반환을 위한 변수임. comment와 String 토큰은 동적 할당 후 main으로 토큰을 반환하는데
@@ -93,6 +93,7 @@ char *commentReader(char *startOfToken){
             if(*nextCheckToken == '\0'){ // 주석이 닫히지 않았을 때
                 printf("주석이 닫히지 않았습니다!\n");
                 free(commentToken);
+                isMallocVar = false;
                 return "COMMENTS ERROR";
             }
     }
@@ -114,6 +115,7 @@ char *stringReader(char *startOfToken){
         nextCheckToken++;
         if(*nextCheckToken == '\0' || *nextCheckToken == '\n'){
             printf("비정상적인 문자열 입력입니다! 따옴표를 닫아 주세요!\n");
+            isMallocVar = false;
             free(stringToken);
             return "STRING ERROR";
         }
