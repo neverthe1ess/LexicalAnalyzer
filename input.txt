@@ -1,2 +1,8 @@
-;/**/Long
-33213213123/*dsadsadad */30
+int a = 3;
+char a = "31dsad dsadasd dasdasd dasdasd";
+/*  test code is beasdasd */;
+float a = 5.23123;
+double b = +12122.3123;
+long b = -12332.32132;
+
+a + b = 3; a - b = 3; a b* = 21 a / 21;

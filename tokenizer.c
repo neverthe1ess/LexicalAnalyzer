@@ -18,14 +18,22 @@ static char *nextCheckToken = NULL;  // static global 변수로 함수가 다시
 
 char *generalTokenizer(char *line) {
     static bool existSemiColons = false; // 10; 붙어 있는 세미콜론 제거를 위한 변수, 10;  토큰 검사시 True 전환
+    static bool existEqualSign = false;
 
     char *startOfToken;
     char *startOfCommentToken;
     char *startOfStringToken;
+
     // 세미콜론을 발견 뒤 다음 토큰 반환에서 세미콜론 반환
     if (existSemiColons) {
         existSemiColons = false;
         return ";"; // 세미콜론 토큰 분리 후 다시 False
+    }
+
+    // equal을 발견 뒤 다음 토큰 반환에서 equal 반환
+    if(existEqualSign) {
+        existEqualSign = false;
+        return "=";
     }
 
     // 새로운 입력값 진입
@@ -41,7 +49,7 @@ char *generalTokenizer(char *line) {
     startOfToken = nextCheckToken;
 
     // 구분자나 주석기호, 따옴표, 널이 될 때까지, 즉 토큰 끝까지 이동
-    while (*nextCheckToken != ' ' && *nextCheckToken != ';' && *nextCheckToken != '\n' && *nextCheckToken != '\0') {
+    while (*nextCheckToken != ' ' && *nextCheckToken != ';' && *nextCheckToken != '=' && *nextCheckToken != '\n' && *nextCheckToken != '\0') {
             // 주석 기호 탐지 시
             if(*nextCheckToken == '/' && *(nextCheckToken + 1) == '*'){
                 startOfCommentToken = nextCheckToken;
@@ -76,6 +84,10 @@ char *generalTokenizer(char *line) {
         while (*nextCheckToken == '\n') {
             nextCheckToken++;
         }
+    } else if(*nextCheckToken == '='){
+        *nextCheckToken = '\0';
+        nextCheckToken++;
+        existEqualSign = true; // =10 검출시 True로 전환 후, 다음 토큰 분리 때 이퀄 사인 반환
     } else if (*nextCheckToken == '\0') {
         //입력의 끝 도달 NULL을 반환함. 즉, 더 이상 Tokenization를 수행하지 않음.
         nextCheckToken = NULL;

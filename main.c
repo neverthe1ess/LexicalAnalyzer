@@ -1,5 +1,5 @@
 /* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
- * 작성일자 : 2024/05/26
+ * 작성일자 : 2024/05/28
  * 코드에 대한 설명: 여러 요구사항을 만족하는 어휘 분석기 코드임.
  * 수행 순서:
  * 1. 지정된 입출력 파일 path에 따라 파일을 읽고 2차원 배열에 저장한다.
@@ -88,6 +88,7 @@ int main(void) {
             strcpy(tokens[totalTokenCount], token); // 토큰 저장
             tokenStates[totalTokenCount++] = lineCheck(token);
         }
+        // 동적 메모리 할당 된 주석, 문자열 토큰은 사용 후 반환 처리
         if(isMallocVar == true){
             free(token);
             isMallocVar = false;
