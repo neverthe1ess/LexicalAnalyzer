@@ -1,12 +1,3 @@
-Token           | Attribute 
-----------------+-----------
-float           | DataType 
-a               | Identifier 
-=               | Delimiter 
-5               | Constant 
-;               | Delimiter 
-char            | Identifier 
-ch              | Identifier 
--               | Operator 
-"srastsdasdas"  | String 
-21312313        | Constant 
+Token             | Attribute 
+------------------+-----------
+/*3213213123123*/ | Comments 

@@ -14,9 +14,9 @@
 #include <string.h>
 #include "fsmbyToken.h"
 #include "tokenizer.h"
-#define MAX_LENGTH 5000
+#define MAX_LENGTH 1500
 #define MAX_LINE_LENGTH 100
-#define MAX_TOKENS 1000
+#define MAX_TOKENS 500
 
 void printHeader(FILE *outfp, int maxLen);
 char *tokenClassifier(int state);
@@ -29,9 +29,9 @@ int main(void) {
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char *inputCode;
-    char tmpBuf[MAX_LINE_LENGTH];
+    char *tmpBuf;
     char tokens[MAX_TOKENS][MAX_LENGTH]; // 모든 토큰을 저장할 배열 추가
-    int tokenStates[MAX_TOKENS]; // 토큰의 상태를 저장할 배열
+    int *tokenStates; // 토큰의 상태를 저장할 배열
     int totalTokenCount = 0; // 전체 토큰 개수
 
     /* 파일 읽기 */
@@ -41,21 +41,43 @@ int main(void) {
         exit(-1);
     }
 
+    inputCode = malloc(MAX_LENGTH);
+    if (!inputCode) {
+        perror("메모리 할당에 실패하였습니다.");
+        exit(-1);
+    }
+    memset(inputCode, 0, MAX_LENGTH);
+
+    tmpBuf = malloc(MAX_LINE_LENGTH);
+    if (tmpBuf == NULL) {
+        perror("메모리 할당에 실패하였습니다.");
+        free(inputCode);
+        exit(-1);
+    }
+    memset(tmpBuf, 0, MAX_LINE_LENGTH);
+
     /* 두줄 주석에 대응하기 위해 기존의 한줄 단위로 받던 매커니즘에서
      * 입력을 통째로 받은 뒤 전체를 끝까지 모두 다 토큰 단위로 쪼개기 */
-
-    inputCode = malloc(MAX_LENGTH);
-    memset(inputCode, 0, MAX_LENGTH);
     while (fgets(tmpBuf, sizeof(tmpBuf), infp) != NULL) {
         if (strlen(inputCode) + strlen(tmpBuf) >= MAX_LENGTH) {
-            fprintf(stderr, "코드의 길이가 너무 깁니다!\n");
+            printf("코드의 길이가 너무 깁니다!\n");
+            free(inputCode);
+            free(tmpBuf);
             exit(-1);
         }
         // inputCode에 buffer의 내용을 누적
         strcat(inputCode, tmpBuf);
     }
+    free(tmpBuf);
     fclose(infp);
 
+    tokenStates = malloc(MAX_TOKENS * sizeof (int));
+    if(!tokenStates) {
+        perror("메모리 할당에 실패하였습니다.");
+        free(inputCode);
+        exit(-1);
+    }
+    memset(tokenStates, 0, MAX_TOKENS * sizeof(int));
 
     char* token;
     // 한 줄마다 토큰 단위로 쪼개기
@@ -72,6 +94,8 @@ int main(void) {
     FILE* outfp = fopen(outputFile, "w");
     if(!outfp) {
         perror("파일 저장에 실패하였습니다. 오류 메시지 ");
+        free(inputCode);
+        free(tokenStates);
         exit(-1);
     }
 
@@ -99,6 +123,7 @@ int main(void) {
     }
     fclose(outfp);
     free(inputCode);
+    free(tokenStates);
     return 0;
 }
 
