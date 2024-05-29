@@ -1,22 +1,5 @@
-Token                            | Attribute 
----------------------------------+-----------
-int                              | DataType 
-a                                | Identifier 
-=                                | Delimiter 
-3                                | Constant 
-;                                | Delimiter 
-char                             | Identifier 
-"31dsad dsadasd dasdasd dasdasd" | String 
-/*  test code is beasdasd */     | Comments 
-float                            | DataType 
-5.23123                          | Constant 
-double                           | DataType 
-b                                | Identifier 
-+12122.3123                      | Constant 
-long                             | DataType 
--12332.32132                     | Constant 
-+                                | Operator 
--                                | Operator 
-b*                               | Unknown 
-21                               | Constant 
-/                                | Operator 
+Token           | Attribute 
+----------------+-----------
+3               | Constant 
+/*dasdasd*/     | Comments 
+dasdasd         | Identifier 

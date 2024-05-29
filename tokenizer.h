@@ -5,5 +5,5 @@
 
 char *generalTokenizer(char *line);
 char *commentReader(char *startOfToken);
-char *stringReader(char *startOfToken);
+void *stringReader();
 #endif //LEXICALANALYZER_TOKENIZER_H

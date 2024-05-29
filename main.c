@@ -2,10 +2,10 @@
  * 작성일자 : 2024/05/28
  * 코드에 대한 설명: 여러 요구사항을 만족하는 어휘 분석기 코드임.
  * 수행 순서:
- * 1. 지정된 입출력 파일 path에 따라 파일을 읽고 2차원 배열에 저장한다.
- * 2. 2차원 배열에 저장된 입력값을 한 줄씩 FSM 함수(linecheck)를 호출하여 수행한다.
+ * 1. 지정된 입출력 파일 path에 따라 파일을 읽고 문자열(1차원 배열)로 저장한다.
+ * 2. 1차원 배열에 저장된 입력값 전체를 FSM 함수(linecheck)를 호출하여 수행한다.
  * 3. FSM 함수의 리턴 값으로 최종 상태를 받아서 수락 상태인지 거부 상태인지 확인한다.
- * 4. 수락 상태 여부와 입력값, 토큰의 클래스를 출력 및 지정한 파일에 저장한다.
+ * 4. 입력값, 토큰의 클래스를 출력 및 지정한 파일에 저장한다.
  * */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -25,8 +25,8 @@ int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token);
 
 int main(void) {
     // 입출력 파일의 path
-    const char* inputFile = "/Users/neverthe1ess/CLionProjects/LexicalAnalyzer/input.txt";
-    const char* outputFile = "/Users/neverthe1ess/CLionProjects/LexicalAnalyzer/output.txt";
+    const char* inputFile = "C:\\Users\\user\\CLionProjects\\LexicalAnalyzer\\input.txt";
+    const char* outputFile = "C:\\Users\\user\\CLionProjects\\LexicalAnalyzer\\output.txt";
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char *inputCode;
@@ -42,6 +42,7 @@ int main(void) {
         exit(-1);
     }
 
+    //입력 받은 코드 (한 줄 단위가 아닌 코드 전체)
     inputCode = malloc(MAX_LENGTH);
     if (!inputCode) {
         perror("메모리 할당에 실패하였습니다.");
@@ -49,6 +50,7 @@ int main(void) {
     }
     memset(inputCode, 0, MAX_LENGTH);
 
+    // 한줄 단위로 입력 받아 inputCode 변수에 append
     tmpBuf = malloc(MAX_LINE_LENGTH);
     if (tmpBuf == NULL) {
         perror("메모리 할당에 실패하였습니다.");
@@ -72,6 +74,7 @@ int main(void) {
     free(tmpBuf);
     fclose(infp);
 
+    // 토큰 상태
     tokenStates = malloc(MAX_TOKENS * sizeof (int));
     if(!tokenStates) {
         perror("메모리 할당에 실패하였습니다.");
@@ -81,7 +84,7 @@ int main(void) {
     memset(tokenStates, 0, MAX_TOKENS * sizeof(int));
 
     char* token;
-    // 한 줄마다 토큰 단위로 쪼개기
+    // 코드 전체를 토큰 단위로 쪼개기
     token = generalTokenizer(inputCode);
     while(token != NULL) {
         if(!isDuplicate(tokens, totalTokenCount, token)) {
@@ -105,7 +108,7 @@ int main(void) {
         exit(-1);
     }
 
-    /* 표 형식으로 정렬하기 위해 입력값의 최대 길이 찾기 */
+    /* 표 형식으로 정렬하기 위해 입력값(lexeme)의 최대 길이 찾기 */
     int maxLen = 15; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
     for (int i = 0; i < totalTokenCount; i++){
         int testLen = strlen(tokens[i]);
@@ -114,7 +117,7 @@ int main(void) {
         }
     }
 
-    // 표 머리글(Result, Token, Attribute) 출력 및 저장
+    // 표 머리글(Token, Attribute) 출력 및 저장
     printHeader(outfp, maxLen);
     printHeader(stdout, maxLen);
 
@@ -153,7 +156,7 @@ void printHeader(FILE *outfp, int maxLen) {
 /* 최종 상태에 따른 토큰의 Attribute 분류 */
 char *tokenClassifier(int state){
     if(state >= REJECT){
-        return "Unknown";
+        return "Undefined";
     } else if (state >= DATATYPE){
         return "DataType";
     } else if (state >= IDENTIFIER){
