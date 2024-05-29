@@ -83,7 +83,7 @@ int main(void) {
     }
     memset(tokenStates, 0, MAX_TOKENS * sizeof(int));
 
-    char* token;
+    char* token;//
     // 코드 전체를 토큰 단위로 쪼개기
     token = generalTokenizer(inputCode);
     while(token != NULL) {
