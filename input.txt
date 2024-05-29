@@ -1,1 +1,2 @@
-3 /*dasdasd*/dasdasd
+char a = "dsad/*dsadasdsdds*/das"
+int c = 333 /*sadasdasd*/

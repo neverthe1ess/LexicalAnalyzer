@@ -151,7 +151,6 @@ void printHeader(FILE *outfp, int maxLen) {
     }
     // 머리글과 데이터를 구분하는 테두리
     fprintf(outfp, "----------------+-----------\n");
-
 }
 /* 최종 상태에 따른 토큰의 Attribute 분류 */
 char *tokenClassifier(int state){

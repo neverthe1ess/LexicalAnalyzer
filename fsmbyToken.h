@@ -2,6 +2,7 @@
  * 작성일자 : 2024/05/28
  * 코드에 대한 설명: 코드의 가독성을 높이기 위한 매크로 사용, 보고서의 오토마타 상태 번호와 매핑시켰음.
  * */
+
 #ifndef LEXICALANALYZER_FSMBYTOKEN_H
 #define LEXICALANALYZER_FSMBYTOKEN_H
 

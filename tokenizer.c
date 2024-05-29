@@ -2,7 +2,7 @@
  * 작성일자 : 2024/05/26
  * 코드에 대한 설명: 이 코드는 메인 함수에서 입력값을 받아 의미가 있는 단위인 토큰 단위를 쪼개는 기능을 수행함.
  * */
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdbool.h>
 #include <string.h>
