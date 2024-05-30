@@ -100,7 +100,7 @@ int lineCheck(char* token){
                     state = CO4;
                 } else { // NOT MUL SIGN
                     state = CO3;
-                } // 오토마타 체크 요망
+                }
                 break;
             case CO4:
                 if(charClass == DIV_SIGN){
@@ -143,6 +143,8 @@ int lineCheck(char* token){
             case ID_D04:
                 if(*ch == 't'){
                     state = DATATYPE_D99;
+                } else if(charClass == LETTER || charClass == DIGIT  && *ch != 't'){
+                    state = ID1;
                 } else {
                     state = REJECT;
                 }

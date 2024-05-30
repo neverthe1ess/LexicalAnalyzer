@@ -1,2 +1,5 @@
-char a = "dsad/*dsadasdsdds*/das"
-int c = 333 /*sadasdasd*/
+int integerNumber = 10;
+float realNumber = -34.251;
+float result;
+
+result = integerNumber + realNumber;

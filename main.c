@@ -25,8 +25,8 @@ int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token);
 
 int main(void) {
     // 입출력 파일의 path
-    const char* inputFile = "C:\\Users\\user\\CLionProjects\\LexicalAnalyzer\\input.txt";
-    const char* outputFile = "C:\\Users\\user\\CLionProjects\\LexicalAnalyzer\\output.txt";
+    const char* inputFile = "/Users/neverthe1ess/CLionProjects/LexicalAnalyzer/input.txt";
+    const char* outputFile = "/Users/neverthe1ess/CLionProjects/LexicalAnalyzer/output.txt";
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char *inputCode;

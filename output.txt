@@ -1,10 +1,12 @@
-Token                    | Attribute 
--------------------------+-----------
-char                     | Identifier 
-a                        | Identifier 
-=                        | Delimiter 
-"dsad/*dsadasdsdds*/das" | String 
-int                      | DataType 
-c                        | Identifier 
-333                      | Constant 
-/*sadasdasd*/            | Comments 
+Token           | Attribute 
+----------------+-----------
+int             | DataType 
+integerNumber   | Identifier 
+=               | Delimiter 
+10              | Constant 
+;               | Delimiter 
+float           | DataType 
+realNumber      | Identifier 
+-34.251         | Constant 
+result          | Identifier 
++               | Operator 

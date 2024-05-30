@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "tokenizer.h"
 
-/* 선택적 동적 메모리 반환을 위한 변수임. comment와 String 토큰은 동적 할당 후 main으로 토큰을 반환하는데
+/* 선택적 동적 메모리 반환을 위한 변수임. comment 토큰은 동적 할당 후 main으로 토큰을 반환하는데
  * 다른 토큰들과 구분되지 않아 정적 할당된 일반 토큰들을 free() 할 수 있는 문제를 막기 위함임.  */
 bool isMallocVar = false;
 
