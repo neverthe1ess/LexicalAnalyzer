@@ -72,9 +72,14 @@
 #define ID_D42 182
 #define ID_D43 183
 
+#define ID_D51 191
+#define ID_D52 192
+#define ID_D53 193
+
+
 // DataType
-#define DATATYPE 190
-#define DATATYPE_D99 199
+#define DATATYPE 200
+#define DATATYPE_D99 209
 
 // 최종적으로 Reject state
 #define REJECT 290

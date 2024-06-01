@@ -29,12 +29,6 @@ char *generalTokenizer(char *line) {
         return ";"; // 세미콜론 토큰 분리 후 다시 False
     }
 
-    // equal을 발견 뒤 다음 토큰 반환에서 equal 반환
-    if(existEqualSign) {
-        existEqualSign = false;
-        return "=";
-    }
-
     // 새로운 입력값 진입
     if (line != NULL) {
         nextCheckToken = line;
@@ -48,7 +42,7 @@ char *generalTokenizer(char *line) {
     startOfToken = nextCheckToken;
 
     // 구분자나 주석기호, 따옴표, 널이 될 때까지, 즉 토큰 끝까지 이동
-    while (*nextCheckToken != ' ' && *nextCheckToken != ';' && *nextCheckToken != '=' && *nextCheckToken != '\n' && *nextCheckToken != '\0') {
+    while (*nextCheckToken != ' ' && *nextCheckToken != ';' && *nextCheckToken != '\n' && *nextCheckToken != '\0') {
             // 주석 기호 탐지 시
             if(*nextCheckToken == '/' && *(nextCheckToken + 1) == '*'){
                 startOfCommentToken = nextCheckToken;
@@ -106,6 +100,10 @@ char *commentReader(char *startOfToken){
                 isMallocVar = false;
                 return "COMMENTS ERROR";
             }
+
+            if(*nextCheckToken == '\n'){
+                *nextCheckToken = ' ';
+            }
     }
     if(*nextCheckToken == '*' && *(nextCheckToken + 1) == '/'){
         nextCheckToken += 2;
@@ -121,10 +119,7 @@ void *stringReader(){
     while(*nextCheckToken != '"' && *nextCheckToken != '\0' && *nextCheckToken != '\n'){
         nextCheckToken++;
     }
-    if(*nextCheckToken == '\0' || *nextCheckToken == '\n'){
-        printf("비정상적인 문자열 입력입니다! 따옴표를 닫아 주세요!\n");
-        *nextCheckToken = '\0';
-    }
+
     if(*nextCheckToken == '"'){
         nextCheckToken++;
     }

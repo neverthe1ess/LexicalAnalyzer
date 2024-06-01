@@ -7,4 +7,6 @@ add_executable(LexicalAnalyzer main.c
         fsmbyToken.c
         fsmbyToken.h
         tokenizer.c
-        tokenizer.h)
+        tokenizer.h
+        parser.c
+        parser.h)

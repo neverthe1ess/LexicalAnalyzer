@@ -5,7 +5,6 @@
  * */
 
 #include "fsmbyToken.h"
-#include <stdio.h>
 
 /* lineCheck()
  * 토큰 단위로 입력받아 FSM에서 상태 전이를 수행한다.
@@ -38,7 +37,9 @@ int lineCheck(char* token){
                     state = ID_D31;
                 } else if (*ch == 'l'){ // long
                     state = ID_D41;
-                } else if (charClass == LETTER){ // Alphabet - {f, i, s, d, l}
+                } else if (*ch == 'c'){ // char
+                    state = ID_D51;
+                } else if (charClass == LETTER){ // Alphabet - {f, i, s, d, l, c}
                     state = ID1;
                 } else if (charClass == ASSIGN_DELIM || charClass == SEMICOLON_DELIM){
                     state = DE1;
@@ -252,6 +253,33 @@ int lineCheck(char* token){
                 if(*ch == 'g'){
                     state = DATATYPE_D99;
                 } else if(charClass == LETTER || charClass == DIGIT  && *ch != 'g'){
+                    state = ID1;
+                } else {
+                    state = REJECT;
+                }
+                break;
+            case ID_D51:
+                if(*ch == 'h'){
+                    state = ID_D52;
+                } else if(charClass == LETTER || charClass == DIGIT && *ch != 'h'){
+                    state = ID1;
+                } else {
+                    state = REJECT;
+                }
+                break;
+            case ID_D52:
+                if(*ch == 'a'){
+                    state = ID_D53;
+                } else if(charClass == LETTER || charClass == DIGIT && *ch != 'a'){
+                    state = ID1;
+                } else {
+                    state = REJECT;
+                }
+                break;
+            case ID_D53:
+                if(*ch == 'r'){
+                    state = DATATYPE_D99;
+                } else if(charClass == LETTER || charClass == DIGIT && *ch != 'r'){
                     state = ID1;
                 } else {
                     state = REJECT;
