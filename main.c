@@ -53,7 +53,7 @@ int main(void) {
     fclose(infp);
 
     char *linePtr[MAX_LINES];
-    int tokenCount[lineCount];
+    int tokenCount[MAX_LINES];
     char* token;
 
     for (int i = 0; i < lineCount; i++) {
@@ -73,7 +73,7 @@ int main(void) {
         totalTokenCount += j;
     }
 
-    bool result[lineCount];
+    bool result[MAX_LINES];
     for (int i = 0; i < lineCount; i++) {
         result[i] = parser(tokenStates[i], tokenCount[i]);
     }
@@ -87,12 +87,12 @@ int main(void) {
 
     /* 표 형식으로 정렬하기 위해 입력값(lexeme)의 최대 길이 찾기 */
     int maxLen = 15; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
-    for (int i = 0; i < totalTokenCount; i++){
-        int testLen = strlen(resultLines[i]);
-        if(maxLen < testLen) {
-            maxLen = testLen;
-        }
-    }
+//    for (int i = 0; i < totalTokenCount; i++){
+//        int testLen = strlen(resultLines[i]);
+//        if(maxLen < testLen) {
+//            maxLen = testLen;
+//        }
+//    }
 
 
     // 표 머리글(Token, Attribute) 출력 및 저장
