@@ -1,4 +1,4 @@
-/* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
+/* 작성자 : 컴퓨터공학과 3학년 조희원(20201086)
  * 작성일자 : 2024/05/26
  * 코드에 대한 설명: 이 코드는 메인 함수에서 입력값을 받아 의미가 있는 단위인 토큰 단위를 쪼개는 기능을 수행함.
  * */
@@ -9,10 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "tokenizer.h"
-
-/* 선택적 동적 메모리 반환을 위한 변수임. comment 토큰은 동적 할당 후 main으로 토큰을 반환하는데
- * 다른 토큰들과 구분되지 않아 정적 할당된 일반 토큰들을 free() 할 수 있는 문제를 막기 위함임.  */
-bool isMallocVar = false;
 
 static char *nextCheckToken = NULL;  // static global 변수로 함수가 다시 호출되어도 호출될때 초기화 되지 않음.
 
@@ -47,7 +43,6 @@ char *generalTokenizer(char *line) {
             if(*nextCheckToken == '/' && *(nextCheckToken + 1) == '*'){
                 startOfCommentToken = nextCheckToken;
                 nextCheckToken += 2; // 주석의 시작을 넘기기
-                isMallocVar = true;
                 return commentReader(startOfCommentToken);
             } else if (*nextCheckToken == '"'){
                 nextCheckToken++;
@@ -76,10 +71,6 @@ char *generalTokenizer(char *line) {
         while (*nextCheckToken == '\n') {
             nextCheckToken++;
         }
-    } else if(*nextCheckToken == '='){
-        *nextCheckToken = '\0';
-        nextCheckToken++;
-        existEqualSign = true; // =10 검출시 True로 전환 후, 다음 토큰 분리 때 이퀄 사인 반환
     } else if (*nextCheckToken == '\0') {
         //입력의 끝 도달 NULL을 반환함. 즉, 더 이상 Tokenization를 수행하지 않음.
         nextCheckToken = NULL;
@@ -94,15 +85,13 @@ char *commentReader(char *startOfToken){
 
     while (*nextCheckToken != '*' && *(nextCheckToken + 1) != '/') {
             nextCheckToken++;
-            if(*nextCheckToken == '\0'){ // 주석이 닫히지 않았을 때
-                printf("주석이 닫히지 않았습니다!\n");
-                free(commentToken);
-                isMallocVar = false;
-                return "COMMENTS ERROR";
-            }
 
             if(*nextCheckToken == '\n'){
-                *nextCheckToken = ' ';
+                *nextCheckToken = '\0';
+            }
+            if(*nextCheckToken == '\0'){ // 주석이 닫히지 않았을 때
+                printf("COMMENTS NOT CLOSED!\n");
+                return startOfToken;
             }
     }
     if(*nextCheckToken == '*' && *(nextCheckToken + 1) == '/'){

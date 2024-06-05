@@ -1,5 +1,5 @@
-/* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
- * 작성일자 : 2024/05/28
+/* 작성자 : 컴퓨터공학과 3학년 조희원(20201086)
+ * 작성일자 : 2024/06/06
  * 코드에 대한 설명: 여러 요구사항을 만족하는 어휘 분석기 코드임.
  * 수행 순서:
  * 1. 지정된 입출력 파일 path에 따라 파일을 읽고 문자열(1차원 배열)로 저장한다.
@@ -18,12 +18,8 @@
 #define MAX_LENGTH 1500
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 100
-#define MAX_TOKENS 50
 
-extern bool isMallocVar;
 void printHeader(FILE *outfp, int maxLen);
-char *tokenClassifier(int state);
-int isDuplicate(char tokens[][MAX_LENGTH], int tokenCount, char *token);
 
 int main(void) {
     // 입출력 파일의 path
@@ -32,8 +28,9 @@ int main(void) {
 
     // 입력 받은 문자열 및 최종 상태를 저장하는 배열
     char inputLines[MAX_LINES][MAX_LINE_LENGTH];
-    char tokens[MAX_LINES][MAX_TOKENS][MAX_LENGTH]; // 모든 토큰을 저장할 배열 추가
-    int tokenStates[MAX_LINES][MAX_LINE_LENGTH]; // 토큰의 상태를 저장할 배열
+    char resultLines[MAX_LINES][MAX_LINE_LENGTH];
+    // 토큰의 상태를 저장할 배열
+    int tokenStates[MAX_LINES][MAX_LINE_LENGTH];
     int totalTokenCount = 0; // 전체 토큰 개수
     int lineCount = 0; // 줄의 개수
 
@@ -60,26 +57,26 @@ int main(void) {
     char* token;
 
     for (int i = 0; i < lineCount; i++) {
+        strcpy(resultLines[i], inputLines[i]); // inputLines는 토큰화로 인해 정상 출력이 안됨. 보조 변수 사용
         linePtr[i] = inputLines[i];
         int j = 0;
 
         //한 줄마다 토큰 단위로 쪼개기
         token = generalTokenizer(linePtr[i]);
         while (token != NULL) {
-            tokenStates[i][j++] = lineCheck(token);
+            if(lineCheck(token) != START && lineCheck(token) != COMM_C05){
+                tokenStates[i][j++] = lineCheck(token);
+            }
             token = generalTokenizer(NULL);
         }
         tokenCount[i] = j;
         totalTokenCount += j;
     }
 
-
-
+    bool result[lineCount];
     for (int i = 0; i < lineCount; i++) {
-        parser(tokenStates[i], tokenCount[i]);
-        printf("\n");
+        result[i] = parser(tokenStates[i], tokenCount[i]);
     }
-
 
     /* 파일 쓰기(저장) */
     FILE* outfp = fopen(outputFile, "w");
@@ -91,7 +88,7 @@ int main(void) {
     /* 표 형식으로 정렬하기 위해 입력값(lexeme)의 최대 길이 찾기 */
     int maxLen = 15; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
     for (int i = 0; i < totalTokenCount; i++){
-        int testLen = strlen(linePtr[i]);
+        int testLen = strlen(resultLines[i]);
         if(maxLen < testLen) {
             maxLen = testLen;
         }
@@ -102,15 +99,18 @@ int main(void) {
     printHeader(outfp, maxLen);
     printHeader(stdout, maxLen);
 
-//    char *attribute;
-//    // 표 데이터(실제 결과) 출력 및 저장, printBody
-//    for(int i = 0; i < totalTokenCount; i++){
-//        attribute = tokenClassifier(tokenStates[i][]);
-//        if(attribute){
-//            fprintf(outfp, "%-*s | %s \n", maxLen, tokens[i], attribute);
-//            fprintf(stdout, "%-*s | %s \n", maxLen, tokens[i], attribute);
-//        }
-//    }
+    // 표 데이터(실제 결과) 출력 및 저장, printBody
+    for(int i = 0; i < lineCount; i++){
+          bool recognizeResult = result[i];
+          if(recognizeResult){
+              fprintf(outfp, "%-*s | Valid \n", maxLen, resultLines[i]);
+              fprintf(stdout, "%-*s | Valid \n", maxLen, resultLines[i]);
+          } else {
+              fprintf(outfp, "%-*s | Invalid \n", maxLen, resultLines[i]);
+              fprintf(stdout, "%-*s | Invalid \n", maxLen, resultLines[i]);
+          }
+
+    }
     fclose(outfp);
     return 0;
 }
@@ -131,36 +131,3 @@ void printHeader(FILE *outfp, int maxLen) {
     // 머리글과 데이터를 구분하는 테두리
     fprintf(outfp, "----------------+-----------\n");
 }
-
-/* 최종 상태에 따른 토큰의 Attribute 분류 */
-char *tokenClassifier(int state){
-    if(state >= REJECT){
-        return "Undefined";
-    } else if (state >= DATATYPE){
-        return "DataType";
-    } else if (state >= IDENTIFIER){
-        return "Identifier";
-    } else if (state >= CONST){
-        return "Constant";
-    } else if (state >= OPERATOR){
-        return "Operator";
-    } else if (state >= DELIMITER){
-        return "Delimiter";
-    } else if (state >= STRING) {
-        return "String";
-    } else if (state >= COMMENTS) {
-        return "Comments";
-    } else {
-        return NULL;
-    }
-}
-
-/* 토큰이 중복인지 확인하는 함수 */
-//int isDuplicate(char tokens[][], int tokenCount, char *token) {
-//    for (int i = 0; i < tokenCount; i++) {
-//        if (strcmp(tokens[i], token) == 0) {
-//            return 1; // 중복
-//        }
-//    }
-//    return 0; // 중복 아님
-//}

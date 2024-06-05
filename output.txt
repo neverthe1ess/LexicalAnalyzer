@@ -1,0 +1,5 @@
+Token                                   | Attribute 
+----------------------------------------+-----------
+int a = 3; dasda int a = 3;             | Invalid 
+/* dsadasd asdasdasdadasa */ int a = 3; | Valid 
+b = a + 3;                              | Valid 

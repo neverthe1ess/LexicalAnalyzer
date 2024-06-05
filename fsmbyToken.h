@@ -1,5 +1,5 @@
-/* 작성자 : 컴퓨터공학과 3학년 김태희(20201101), 조희원(20201086)
- * 작성일자 : 2024/05/28
+/* 작성자 : 컴퓨터공학과 3학년 조희원(20201086)
+ * 작성일자 : 2024/06/06
  * 코드에 대한 설명: 코드의 가독성을 높이기 위한 매크로 사용, 보고서의 오토마타 상태 번호와 매핑시켰음.
  * */
 
@@ -30,9 +30,13 @@
 #define STRING 70
 #define STR2 72
 
+//assign op
+#define ASSIGN 80
+#define ASSIGN_DE1 81
+
 //delimiter
-#define DELIMITER 80
-#define DE1 81
+#define DELIMITER 90
+#define SEMICOLON_DE2 91
 
 
 // operator

@@ -1,2 +1,0 @@
-int integerNumber = 3 3 3 3 3 3 3
-char a = "dsada";
