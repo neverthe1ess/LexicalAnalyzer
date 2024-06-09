@@ -1,2 +1,125 @@
-Token           | Attribute 
-----------------+-----------
+Token                                                                            | Attribute 
+---------------------------------------------------------------------------------+-----------
+#include <sys/socket.h>                                                          | Invalid 
+#include <netinet/in.h>                                                          | Invalid 
+#include <pthread.h>                                                             | Invalid 
+#include <stdio.h>                                                               | Invalid 
+"                                                                               | Invalid 
+#include <unistd.h>                                                              | Invalid 
+#include <string.h>                                                              | Invalid 
+                                                                                 | Valid 
+"                                                                               | Invalid 
+                                                                                 | Valid 
+void *tcpRxThread(void * server1_addr);                                          | Invalid 
+void *udpRxThread(void * server1_addr);                                          | Invalid 
+"                                                                               | Valid 
+//입력값은 포트번호 받기                                               | Invalid 
+int main(int argc, char *argv[]){                                                | Invalid 
+    //서버 주소 구조체                                                    | Invalid 
+"                                                                               | Invalid 
+    //쓰레드 식별자                                                        | Invalid 
+    pthread_t udp_s_thread, tcp_s_thread;                                        | Invalid 
+                                                                                 | Valid 
+"                                                                               | Invalid 
+        printf("잘못된 사용법 !\n");                                       | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    bzero((char *)&server_addr, sizeof(server_addr));                            | Invalid 
+    server_addr.sin_family = AF_INET;                                            | Invalid 
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);                             | Invalid 
+"                                                                               | Invalid 
+                                                                                 | Valid 
+    if(pthread_create(&tcp_s_thread, NULL, tcpRxThread, (void *)&server_addr) != 0){ | Invalid 
+        perror("TCP 쓰레드 생성 실패 \n");                                | Invalid 
+"                                                                               | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    if(pthread_create(&udp_s_thread, NULL, udpRxThread, (void *)&server_addr) != 0){ | Invalid 
+"                                                                               | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+"                                                                               | Invalid 
+                                                                                 | Valid 
+void *tcpRxThread(void * server1_addr) {                                         | Invalid 
+    int tcp_server_fd, client_fd, len, msg_size;                                 | Invalid 
+    struct sockaddr_in client_addr, server_addr;                                 | Invalid 
+    char buf[BUF_LEN];                                                           | Invalid 
+    server_addr = *((struct sockaddr_in *) server1_addr);                        | Invalid 
+                                                                                 | Valid 
+"                                                                               | Invalid 
+    if((tcp_server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){                   | Invalid 
+        printf("서버 소켓 개설이 실패하였음!\n");                    | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    // 소켓 주소 바인딩                                                   | Invalid 
+    if(bind(tcp_server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){ | Invalid 
+"                                                                               | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+    // 연결 대기 큐 설정                                                  | Invalid 
+    listen(tcp_server_fd, 5);                                                    | Invalid 
+    len = sizeof(client_addr);                                                   | Invalid 
+                                                                                 | Valid 
+    while(1) {                                                                   | Invalid 
+        printf("서버는 연결 요청을 대기하고 있습니다. listening......"); | Invalid 
+                                                                                 | Valid 
+        client_fd = accept(tcp_server_fd, (struct sockaddr *)&client_addr, &len); | Invalid 
+        if(client_fd < 0) {                                                      | Invalid 
+            printf("서버 : 연결 수락 실패! \n");                         | Invalid 
+            continue;                                                            | Invalid 
+        }                                                                        | Invalid 
+        msg_size = recv(client_fd, buf, BUF_LEN, 0);                             | Invalid 
+        if(msg_size < 0){                                                        | Invalid 
+            printf("메시지 수신 실패! \n");                               | Invalid 
+            exit(0);                                                             | Invalid 
+        }                                                                        | Invalid 
+        send(client_fd, buf, msg_size, 0);                                       | Invalid 
+    }                                                                            | Invalid 
+}                                                                                | Invalid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+void *udpRxThread(void * server1_addr){                                          | Invalid 
+    int udp_server_fd, len, msg_size;                                            | Invalid 
+    struct sockaddr_in client_addr, server_addr;                                 | Invalid 
+    char buf[BUF_LEN];                                                           | Invalid 
+    server_addr = *((struct sockaddr_in *) server1_addr);                        | Invalid 
+                                                                                 | Valid 
+    // UDP 소켓 개설                                                         | Invalid 
+    if((udp_server_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){                    | Invalid 
+        printf("서버 소켓 개설이 실패하였음!\n");                    | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    // 소켓 주소 바인딩                                                   | Invalid 
+    if(bind(udp_server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){ | Invalid 
+        printf("서버: 바인딩 실패!\n");                                   | Invalid 
+        exit(0);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    len = sizeof(client_addr);                                                   | Invalid 
+                                                                                 | Valid 
+    if((msg_size = recvfrom(udp_server_fd, buf, BUF_LEN, 0, (struct sockaddr *) &client_addr, &len) | Invalid 
+ < 0)){                                                                          | Invalid 
+        printf("수신 오류\n");                                               | Invalid 
+        exit(1);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    if(sendto(udp_server_fd, buf, msg_size, 0, (struct sockaddr *)&client_addr, len) < 0){ | Invalid 
+        printf("송신 오류\n");                                               | Invalid 
+        exit(1);                                                                 | Invalid 
+    }                                                                            | Invalid 
+                                                                                 | Valid 
+    close(udp_server_fd);                                                        | Invalid 
+                                                                                 | Valid 
+}                                                                                | Invalid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 
+                                                                                 | Valid 

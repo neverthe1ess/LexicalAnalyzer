@@ -86,7 +86,7 @@ int main(void) {
     }
 
     /* 표 형식으로 정렬하기 위해 입력값(lexeme)의 최대 길이 찾기 */
-    int maxLen = 15; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
+    int maxLen = 80; // 매직넘버 15, 표 출력 시 알맞은 길이로 기본 설정
 //    for (int i = 0; i < totalTokenCount; i++){
 //        int testLen = strlen(resultLines[i]);
 //        if(maxLen < testLen) {
